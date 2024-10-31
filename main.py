@@ -22,7 +22,7 @@ enemies = []  # List to hold enemy positions
 boxes = []  # List to hold box positions
 score = 0  # Player's score
 player_lives = 3  # Player starts with 3 lives
-player_data_file = "player_data.json"  # File to save player data
+player_data_file = "data.json"  # File to save player data
 show_attack_message = False  # To control when to show the attack message
 attack_message_shown = False  # To make sure message is only shown once
 
@@ -186,7 +186,7 @@ class Map:
                 indexed_line += f"{Colors.RED}{ENEMY_CH}{Colors.RESET}"
             elif i in boxes:
                 indexed_line += f"{Colors.YELLOW}{BOX_CH}{Colors.RESET}"
-            elif i == self.columns - 1:  # آخرین کاراکتر مپ
+            elif i == self.columns - 1:
                 indexed_line += ">"
             else:
                 indexed_line += EMPTY_CH
@@ -195,18 +195,18 @@ class Map:
         sys.stdout.flush()
 
         self.check_attack_option()
-        # بررسی اینکه آیا بازیکن به مپ جدید منتقل شده
+        # Check if the player has been moved to a new map
         self.check_new_map()
 
     def check_new_map(self):
-        """اگر بازیکن به آخرین کاراکتر برسد، او را به مپ جدید منتقل کن."""
+        """If the player reaches the last character, move them to a new map.""""
         global player_position
         if player_position == self.columns - 1:
             print(f"{Colors.BLUE}You reached the end! Loading new map...{Colors.RESET}")
             time.sleep(2)
-            player_position = 0  # انتقال بازیکن به ابتدای مپ جدید
-            self.generate_enemies()  # دشمن‌های جدید ایجاد می‌کند
-            self.generate_boxes()  # باکس‌های جدید ایجاد می‌کند
+            player_position = 0  # Move player to the beginning of a new map
+            self.generate_enemies()  # Creates new enemies
+            self.generate_boxes()  # Creates new boxes
 
     def check_attack_option(self):
         """Check if player is next to an enemy or box and show corresponding messages."""
@@ -338,16 +338,16 @@ while GAME_STATUS:
         # Check for attack or box opening
         if "e" in input_handler.keys_pressed:
             if player_position in enemies:
-                enemies.remove(player_position)  # حذف دشمن
-                score += 100  # افزایش امتیاز
+                enemies.remove(player_position)  # Eliminate the enemy
+                score += 100  # Increase points
             elif player_position - 1 in enemies:
-                enemies.remove(player_position - 1)  # حذف دشمن سمت چپ
+                enemies.remove(player_position - 1)  # Eliminate the enemy on the left.
                 score += 100
             elif player_position + 1 in enemies:
-                enemies.remove(player_position + 1)  # حذف دشمن سمت راست
+                enemies.remove(player_position + 1)  # Eliminate the enemy on the right.
                 score += 100
             elif player_position in boxes:
-                boxes.remove(player_position)  # حذف باکس بعد از باز کردن
+                boxes.remove(player_position)  # Delete box after opening
                 reward = random.choice(["Extra Life", "Score Boost", "Nothing"])
                 reward = random.choice(["Extra Life", "Score Boost", "Speed Boost", "Penalty"])
                 if reward == "Extra Life":
@@ -357,7 +357,7 @@ while GAME_STATUS:
                     score += 50
                     print(f"{Colors.GREEN}You received a score boost! Score: {score}{Colors.RESET}")
                 elif reward == "Speed Boost":
-                    # بهبود سرعت حرکت بازیکن برای مدت کوتاهی
+                    # Improved player movement speed for a short time
                     speed_boost = True
                 elif reward == "Penalty":
                     player_lives -= 1
