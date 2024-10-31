@@ -175,7 +175,7 @@ class Map:
 
             new_enemies.append(new_pos)  # Update enemies' positions
         enemies = new_enemies
-        time.sleep(0.1)  # Slows down enemy movement
+        time.sleep(1)  # Slows down enemy movement
 
     def draw(self):
         indexed_line = ""
@@ -199,7 +199,7 @@ class Map:
         self.check_new_map()
 
     def check_new_map(self):
-        """If the player reaches the last character, move them to a new map.""""
+        """If the player reaches the last character, move them to a new map."""
         global player_position
         if player_position == self.columns - 1:
             print(f"{Colors.BLUE}You reached the end! Loading new map...{Colors.RESET}")
@@ -349,19 +349,27 @@ while GAME_STATUS:
             elif player_position in boxes:
                 boxes.remove(player_position)  # Delete box after opening
                 reward = random.choice(["Extra Life", "Score Boost", "Nothing"])
-                reward = random.choice(["Extra Life", "Score Boost", "Speed Boost", "Penalty"])
+                reward = random.choice(
+                    ["Extra Life", "Score Boost", "Speed Boost", "Penalty"]
+                )
                 if reward == "Extra Life":
                     player_lives += 1
-                    print(f"{Colors.GREEN}You received an extra life! Lives: {player_lives}{Colors.RESET}")
+                    print(
+                        f"{Colors.GREEN}You received an extra life! Lives: {player_lives}{Colors.RESET}"
+                    )
                 elif reward == "Score Boost":
                     score += 50
-                    print(f"{Colors.GREEN}You received a score boost! Score: {score}{Colors.RESET}")
+                    print(
+                        f"{Colors.GREEN}You received a score boost! Score: {score}{Colors.RESET}"
+                    )
                 elif reward == "Speed Boost":
                     # Improved player movement speed for a short time
                     speed_boost = True
                 elif reward == "Penalty":
                     player_lives -= 1
-                    print(f"{Colors.RED}The box was cursed! You lost a life! Lives: {player_lives}{Colors.RESET}")
+                    print(
+                        f"{Colors.RED}The box was cursed! You lost a life! Lives: {player_lives}{Colors.RESET}"
+                    )
                 else:
                     print(f"{Colors.YELLOW}The box was empty!{Colors.RESET}")
                 time.sleep(0.5)
