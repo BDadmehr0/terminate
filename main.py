@@ -65,7 +65,9 @@ class SystemCall:
     @staticmethod
     def clear_screen():
         sys.stdout.write("\033[H\033[J")
-        sys.stdout.write(f"Player Lives: {player_lives}/3\n")  # Display player lives
+        sys.stdout.write(
+            f"Player Lives: {player_lives}/3\tScore: {score}\n\n"
+        )  # Display player lives
         sys.stdout.flush()
 
     @staticmethod
@@ -133,8 +135,20 @@ class Map:
             SystemCall.get_terminal_size()
         )  # Use the SystemCall method to get terminal size
 
+        self.generated_map = (
+            self.generate_random_map()
+        )  # Generate random charachter map
         self.generate_enemies()  # Generate enemies when map is created
         self.generate_boxes()  # Generate boxes when map is created
+
+    def generate_random_map(self):
+        """Generate a random map layout with weighted probabilities for '.', '_', '⌂', and '↟'."""
+        characters = [".", "_", "⌂", "↟"]
+        weights = [40, 40, 1, 10]  # احتمال بیشتر برای '.' و '_'
+        
+        # تولید نقشه با انتخاب کاراکترها با وزن‌های مشخص شده
+        random_map = "".join(random.choices(characters, weights, k=self.columns))
+        return random_map
 
     def generate_boxes(self):
         """Generate boxes with a 0.5% chance on the map."""
@@ -175,13 +189,13 @@ class Map:
 
             new_enemies.append(new_pos)  # Update enemies' positions
         enemies = new_enemies
-        time.sleep(1)  # Slows down enemy movement
+        time.sleep(0.1)  # Slows down enemy movement
 
     def draw(self):
         indexed_line = ""
         for i in range(self.columns):
             if i == player_position:
-                indexed_line += PLAYER_CH
+                indexed_line += f"{Colors.BLUE}{PLAYER_CH}{Colors.RESET}"
             elif i in enemies:
                 indexed_line += f"{Colors.RED}{ENEMY_CH}{Colors.RESET}"
             elif i in boxes:
@@ -189,7 +203,11 @@ class Map:
             elif i == self.columns - 1:
                 indexed_line += ">"
             else:
-                indexed_line += EMPTY_CH
+                # Here we specify that the character "↟" should be green.
+                if self.generated_map[i] == "↟":
+                    indexed_line += f"{Colors.GREEN}↟{Colors.RESET}"
+                else:
+                    indexed_line += self.generated_map[i]
 
         sys.stdout.write(indexed_line + "\n")
         sys.stdout.flush()
