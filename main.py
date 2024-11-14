@@ -1,10 +1,11 @@
+import json  # Import json module to save player data
 import os
+import random
+import signal
 import sys
 import termios
-import signal
 import time
-import random
-import json  # Import json module to save player data
+
 from pynput import keyboard
 
 # Character
@@ -50,6 +51,7 @@ class FGColors:
     CYAN = "\033[96m"
     WHITE = "\033[97m"
 
+
 class BGColors:
     RESET = "\033[49m"
     RED = "\033[41m"
@@ -59,7 +61,6 @@ class BGColors:
     MAGENTA = "\033[45m"
     CYAN = "\033[46m"
     WHITE = "\033[47m"
-
 
 
 class SystemCall:
@@ -156,7 +157,7 @@ class Map:
         """Generate a random map layout with weighted probabilities for '.', '_', '⌂', and '↟'."""
         characters = [".", "_", "⌂", "↟"]
         weights = [40, 40, 1, 10]  # احتمال بیشتر برای '.' و '_'
-        
+
         # تولید نقشه با انتخاب کاراکترها با وزن‌های مشخص شده
         random_map = "".join(random.choices(characters, weights, k=self.columns))
         return random_map
@@ -231,7 +232,9 @@ class Map:
         """If the player reaches the last character, move them to a new map."""
         global player_position
         if player_position == self.columns - 1:
-            print(f"{FGColors.BLUE}You reached the end! Loading new map...{FGColors.RESET}")
+            print(
+                f"{FGColors.BLUE}You reached the end! Loading new map...{FGColors.RESET}"
+            )
             time.sleep(2)
             player_position = 0  # Move player to the beginning of a new map
             self.generate_enemies()  # Creates new enemies
@@ -247,12 +250,16 @@ class Map:
             or player_position + 1 in enemies
         ):
             if not attack_message_shown:  # Only show the message once
-                print(f"{FGColors.YELLOW}You can attack by pressing 'E'.{FGColors.RESET}")
+                print(
+                    f"{FGColors.YELLOW}You can attack by pressing 'E'.{FGColors.RESET}"
+                )
                 attack_message_shown = True
                 show_attack_message = True
                 time.sleep(2)  # Pause for 2 seconds after showing the message
         elif player_position in boxes:
-            print(f"{FGColors.GREEN}You found a box! Press 'E' to open it.{FGColors.RESET}")
+            print(
+                f"{FGColors.GREEN}You found a box! Press 'E' to open it.{FGColors.RESET}"
+            )
 
 
 def show_menu():
