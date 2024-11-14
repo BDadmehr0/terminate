@@ -316,8 +316,20 @@ def show_help():
         "Press 'E' to attack enemies.",
         "Press Ctrl+C to exit the game at any time.",
         "",
-        "Help - Page 2: The objective of the game is to navigate through the map.",
-        "You can explore different areas and avoid obstacles.",
+        "Help - Page 2: To move faster, hold the 'Shift' key while pressing 'a' or 'd'.",
+        "You can also attack enemies by pressing 'E' when you're next to them.",
+        "Enemies appear randomly on the map, and you need to avoid or defeat them.",
+        "",
+        "Help - Page 3: You can find boxes scattered throughout the map.",
+        "Press 'E' to open a box. It might contain:",
+        "- An extra life",
+        "- A score boost",
+        "- A speed boost",
+        "- Or a penalty (losing a life)",
+        "Be careful, some boxes are cursed!",
+        "",
+        "Help - Page 4: The objective of the game is to navigate through the map, avoid enemies, and collect rewards.",
+        "Try to survive as long as possible and rack up your score!",
         "Have fun playing!",
         "",
         "Press any key to return to the main menu.",
@@ -330,6 +342,7 @@ def show_help():
             input("Press Enter to go to the next page...")
         else:
             input("Press Enter to return to the main menu...")
+
 
 
 def save_player_data():
