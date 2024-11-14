@@ -37,7 +37,10 @@ ALLOWED_KEYS = {
     keyboard.Key.ctrl_l,
     keyboard.Key.ctrl_r,
     keyboard.KeyCode.from_char("x"),
+    keyboard.Key.shift_l,  # Left shift
+    keyboard.Key.shift_r,  # Right shift
 }
+
 
 
 # Color definitions
@@ -114,6 +117,7 @@ class SystemCall:
 class SystemInputs:
     def __init__(self):
         self.keys_pressed = set()
+        self.shift_pressed = False  # Track shift key state
         self.listener = keyboard.Listener(
             on_press=self.on_press, on_release=self.on_release
         )
@@ -121,19 +125,29 @@ class SystemInputs:
 
     def on_press(self, key):
         try:
-            if hasattr(key, "char") and key.char in ALLOWED_KEYS:
-                self.keys_pressed.add(key.char)
+            if hasattr(key, "char"):
+                if key.char in ALLOWED_KEYS:
+                    self.keys_pressed.add(key.char)
             elif key in ALLOWED_KEYS:
                 self.keys_pressed.add(key)
+
+            # Check if shift is pressed
+            if key == keyboard.Key.shift_l or key == keyboard.Key.shift_r:
+                self.shift_pressed = True
         except AttributeError:
             pass
 
     def on_release(self, key):
         try:
-            if hasattr(key, "char") and key.char in ALLOWED_KEYS:
-                self.keys_pressed.remove(key.char)
+            if hasattr(key, "char"):
+                if key.char in ALLOWED_KEYS:
+                    self.keys_pressed.remove(key.char)
             elif key in ALLOWED_KEYS:
                 self.keys_pressed.remove(key)
+
+            # Check if shift is released
+            if key == keyboard.Key.shift_l or key == keyboard.Key.shift_r:
+                self.shift_pressed = False
         except KeyError:
             pass
 
@@ -412,12 +426,17 @@ while GAME_STATUS:
 
         # Adjust player position based on key presses
         if "a" in input_handler.keys_pressed and player_position > 0:
-            player_position -= 1
-        elif (
-            "d" in input_handler.keys_pressed
-            and player_position < map_instance.columns - 1
-        ):
-            player_position += 1
+            if input_handler.shift_pressed:  # If shift is pressed, move faster
+                player_position -= 2  # Move 2 steps left
+            else:
+                player_position -= 1  # Normal speed
+        elif "d" in input_handler.keys_pressed and player_position < map_instance.columns - 1:
+            if input_handler.shift_pressed:  # If shift is pressed, move faster
+                player_position += 2  # Move 2 steps right
+            else:
+                player_position += 1  # Normal speed
+
+
 
         time.sleep(0.01)  # Slow down the game loop a bit
     except KeyboardInterrupt:
