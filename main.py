@@ -185,12 +185,15 @@ class Map:
                 boxes.append(i)  # Add box at the position i
 
     def generate_enemies(self):
-        """Generate enemies with a 20% chance in every 5% of the map."""
+        """Generate enemies with a 20% chance, excluding the first and last 5 columns."""
         global enemies
-        enemies = []  # Reset enemies for a new game
-        for i in range(self.columns):
-            if random.random() < 0.05:  # 20% chance to spawn an enemy
-                enemies.append(i)  # Add enemy at the position i
+        enemies = []  # ریست کردن دشمن‌ها برای نقشه جدید
+        start_range = 50  # شروع از ۵ ستون اول
+        end_range = self.columns - 5  # پایان در ۵ ستون آخر
+
+        for i in range(start_range, end_range):
+            if random.random() < 0.05:  # احتمال ۲۰٪ برای تولید دشمن
+                enemies.append(i)  # دشمن در این موقعیت ایجاد می‌شود
 
     def move_enemies_towards_player(self):
         """Move enemies one step towards the player."""
