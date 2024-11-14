@@ -42,7 +42,6 @@ ALLOWED_KEYS = {
 }
 
 
-
 # Color definitions
 class FGColors:
     RESET = "\033[0m"
@@ -433,13 +432,14 @@ while GAME_STATUS:
                 player_position -= 2  # Move 2 steps left
             else:
                 player_position -= 1  # Normal speed
-        elif "d" in input_handler.keys_pressed and player_position < map_instance.columns - 1:
+        elif (
+            "d" in input_handler.keys_pressed
+            and player_position < map_instance.columns - 1
+        ):
             if input_handler.shift_pressed:  # If shift is pressed, move faster
                 player_position += 2  # Move 2 steps right
             else:
                 player_position += 1  # Normal speed
-
-
 
         time.sleep(0.01)  # Slow down the game loop a bit
     except KeyboardInterrupt:
