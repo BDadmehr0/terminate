@@ -40,7 +40,7 @@ ALLOWED_KEYS = {
 
 
 # Color definitions
-class Colors:
+class FGColors:
     RESET = "\033[0m"
     RED = "\033[91m"
     GREEN = "\033[92m"
@@ -49,6 +49,17 @@ class Colors:
     MAGENTA = "\033[95m"
     CYAN = "\033[96m"
     WHITE = "\033[97m"
+
+class BGColors:
+    RESET = "\033[49m"
+    RED = "\033[41m"
+    GREEN = "\033[42m"
+    YELLOW = "\033[43m"
+    BLUE = "\033[44m"
+    MAGENTA = "\033[45m"
+    CYAN = "\033[46m"
+    WHITE = "\033[47m"
+
 
 
 class SystemCall:
@@ -179,10 +190,10 @@ class Map:
                 # Enemy reached the player, decrease player's lives
                 player_lives -= 1
                 print(
-                    f"{Colors.RED}Enemy hit you! Lives remaining: {player_lives}{Colors.RESET}"
+                    f"{FGColors.RED}Enemy hit you! Lives remaining: {player_lives}{FGColors.RESET}"
                 )
                 if player_lives <= 0:
-                    print(f"{Colors.RED}Game Over!{Colors.RESET}")
+                    print(f"{FGColors.RED}Game Over!{FGColors.RESET}")
                     GAME_STATUS = False
                     return
                 continue  # Do not add this enemy to new list, it's dead now
@@ -195,17 +206,17 @@ class Map:
         indexed_line = ""
         for i in range(self.columns):
             if i == player_position:
-                indexed_line += f"{Colors.BLUE}{PLAYER_CH}{Colors.RESET}"
+                indexed_line += f"{FGColors.BLUE}{PLAYER_CH}{FGColors.RESET}"
             elif i in enemies:
-                indexed_line += f"{Colors.RED}{ENEMY_CH}{Colors.RESET}"
+                indexed_line += f"{FGColors.RED}{ENEMY_CH}{FGColors.RESET}"
             elif i in boxes:
-                indexed_line += f"{Colors.YELLOW}{BOX_CH}{Colors.RESET}"
+                indexed_line += f"{FGColors.YELLOW}{BOX_CH}{FGColors.RESET}"
             elif i == self.columns - 1:
-                indexed_line += ">"
+                indexed_line += f"{BGColors.MAGENTA}{FGColors.WHITE}>{FGColors.RESET}{BGColors.RESET}"
             else:
                 # Here we specify that the character "↟" should be green.
                 if self.generated_map[i] == "↟":
-                    indexed_line += f"{Colors.GREEN}↟{Colors.RESET}"
+                    indexed_line += f"{FGColors.GREEN}↟{FGColors.RESET}"
                 else:
                     indexed_line += self.generated_map[i]
 
@@ -220,7 +231,7 @@ class Map:
         """If the player reaches the last character, move them to a new map."""
         global player_position
         if player_position == self.columns - 1:
-            print(f"{Colors.BLUE}You reached the end! Loading new map...{Colors.RESET}")
+            print(f"{FGColors.BLUE}You reached the end! Loading new map...{FGColors.RESET}")
             time.sleep(2)
             player_position = 0  # Move player to the beginning of a new map
             self.generate_enemies()  # Creates new enemies
@@ -236,12 +247,12 @@ class Map:
             or player_position + 1 in enemies
         ):
             if not attack_message_shown:  # Only show the message once
-                print(f"{Colors.YELLOW}You can attack by pressing 'E'.{Colors.RESET}")
+                print(f"{FGColors.YELLOW}You can attack by pressing 'E'.{FGColors.RESET}")
                 attack_message_shown = True
                 show_attack_message = True
                 time.sleep(2)  # Pause for 2 seconds after showing the message
         elif player_position in boxes:
-            print(f"{Colors.GREEN}You found a box! Press 'E' to open it.{Colors.RESET}")
+            print(f"{FGColors.GREEN}You found a box! Press 'E' to open it.{FGColors.RESET}")
 
 
 def show_menu():
@@ -373,12 +384,12 @@ while GAME_STATUS:
                 if reward == "Extra Life":
                     player_lives += 1
                     print(
-                        f"{Colors.GREEN}You received an extra life! Lives: {player_lives}{Colors.RESET}"
+                        f"{FGColors.GREEN}You received an extra life! Lives: {player_lives}{FGColors.RESET}"
                     )
                 elif reward == "Score Boost":
                     score += 50
                     print(
-                        f"{Colors.GREEN}You received a score boost! Score: {score}{Colors.RESET}"
+                        f"{FGColors.GREEN}You received a score boost! Score: {score}{FGColors.RESET}"
                     )
                 elif reward == "Speed Boost":
                     # Improved player movement speed for a short time
@@ -386,10 +397,10 @@ while GAME_STATUS:
                 elif reward == "Penalty":
                     player_lives -= 1
                     print(
-                        f"{Colors.RED}The box was cursed! You lost a life! Lives: {player_lives}{Colors.RESET}"
+                        f"{FGColors.RED}The box was cursed! You lost a life! Lives: {player_lives}{FGColors.RESET}"
                     )
                 else:
-                    print(f"{Colors.YELLOW}The box was empty!{Colors.RESET}")
+                    print(f"{FGColors.YELLOW}The box was empty!{FGColors.RESET}")
                 time.sleep(0.5)
 
         # Adjust player position based on key presses
