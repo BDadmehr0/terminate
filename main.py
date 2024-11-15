@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json  # Import json module to save player data
 import os
 import random
@@ -94,7 +95,6 @@ class SystemCall:
         os.system("clear")
         global old_settings  # Make sure we're using the global old_settings
         SystemCall.restore_echo(old_settings)
-        print("exit")
         save_player_data()  # Save player data before exiting
         sys.exit(0)
 
@@ -271,7 +271,7 @@ class Map:
                 )
                 attack_message_shown = True
                 show_attack_message = True
-                time.sleep(2)  # Pause for 2 seconds after showing the message
+                # time.sleep(2)  # Pause for 2 seconds after showing the message
         elif player_position in boxes:
             print(
                 f"{FGColors.GREEN}You found a box! Press 'E' to open it.{FGColors.RESET}"
@@ -344,7 +344,6 @@ def show_help():
             input("Press Enter to return to the main menu...")
 
 
-
 def save_player_data():
     """Save player position, score, lives, and enemies to a JSON file."""
     player_data = {
@@ -359,20 +358,54 @@ def save_player_data():
 
 def load_player_data():
     """Load player position, score, lives, and enemies from a JSON file."""
-    global player_position, score, player_lives, enemies
-    if os.path.exists(player_data_file):
-        with open(player_data_file, "r") as file:
-            player_data = json.load(file)
-            player_position = player_data.get(
-                "position", 0
-            )  # Default to 0 if not found
-            score = player_data.get("score", 0)  # Default to 0 if not found
-            player_lives = player_data.get(
-                "lives", 3
-            )  # Default to 3 lives if not found
-            enemies = player_data.get(
-                "enemies", []
-            )  # Default to empty list if not found
+    global player_position, score, player_lives, enemies, GAME_STATUS, old_settings
+    while True:
+        if os.path.exists(player_data_file):
+            os.system("clear")
+            print("1. Start new game")
+            print("2. Load old game")
+            print("3. Back")
+
+            old_settings = SystemCall.restore_echo(old_settings)
+            choice_menu2 = input("Please choose an option (1, 2 or 3): ")
+
+            # Restore echo to disabled after menu input
+            old_settings = SystemCall.disable_echo()
+
+            if choice_menu2 == "1":
+                player_position = 0
+                score = 0
+                player_lives = 3
+                enemies = []
+                GAME_STATUS = True
+                break
+            elif choice_menu2 == "2":
+                with open(player_data_file, "r") as file:
+                    player_data = json.load(file)
+                    player_position = player_data.get(
+                        "position", 0
+                    )  # Default to 0 if not found
+                    score = player_data.get("score", 0)  # Default to 0 if not found
+                    player_lives = player_data.get(
+                        "lives", 3
+                    )  # Default to 3 lives if not found
+                    enemies = player_data.get(
+                        "enemies", []
+                    )  # Default to empty list if not found
+                GAME_STATUS = True
+                break
+            elif choice_menu2 == "3":
+                show_menu()
+            else:
+                print("Invalid choice. Please choose 1, 2 or 3.")
+                time.sleep(1)  # Pause before showing the menu again
+        else:
+            player_position = 0
+            score = 0
+            player_lives = 3
+            enemies = []
+            GAME_STATUS = True
+            break
 
 
 # Register signal handlers
@@ -454,7 +487,7 @@ while GAME_STATUS:
             else:
                 player_position += 1  # Normal speed
 
-        time.sleep(0.01)  # Slow down the game loop a bit
+        # time.sleep(0.01)  # Slow down the game loop a bit
     except KeyboardInterrupt:
         SystemCall.handle_exit_signal(None, None)
 
