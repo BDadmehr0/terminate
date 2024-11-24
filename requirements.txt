@@ -1,5 +1,2 @@
 colorama
 pynput
-pytest
-flake8
-safety
