@@ -289,7 +289,8 @@ class Map:
     Attributes:
     columns (int): The number of columns in the map (based on terminal size).
     lines (int): The number of lines in the terminal (used for map generation).
-    generated_map (str): A string representing the map layout with characters like '.', '_', '⌂', and '↟'.
+    generated_map (str): A string representing the map layout with characters like '.', '_', 
+                     '⌂', and '↟'.
     enemies (list): A list of positions where enemies are located on the map.
     boxes (list): A list of positions where boxes are located on the map.
 
@@ -297,11 +298,13 @@ class Map:
     __init__(): Initializes the map, generates the layout, and creates enemies and boxes.
     generate_random_map(): Creates a random map with weighted probabilities for various characters.
     generate_boxes(): Generates boxes on the map with a 0.5% chance for each column.
-    generate_enemies(): Spawns enemies on the map with a 20% chance, excluding the first and last 5 columns.
+    generate_enemies(): Spawns enemies on the map with a 20% chance, excluding the first 
+                    and last 5 columns.
     move_enemies_towards_player(): Moves enemies toward the player and decreases lives on collision.
     draw(): Renders the map, showing the player, enemies, boxes, and other elements.
     check_new_map(): Checks if the player reached the map's end and moves to a new map.
-    check_attack_option(): Checks if the player is adjacent to an enemy or box and shows the attack message.
+    check_attack_option(): Checks if the player is adjacent to
+                    an enemy or box and shows the attack message.
     """
 
     def __init__(self):
