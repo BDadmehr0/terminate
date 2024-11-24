@@ -327,7 +327,7 @@ def show_help():
         "- Or a penalty (losing a life)",
         "Be careful, some boxes are cursed!",
         "",
-        "Help - Page 4: The objective of the game is to navigate through the map, avoid enemies, and collect rewards.",
+        "Help - Page 4: Navigate the map, dodge enemies, and gather rewards.",
         "Try to survive as long as possible and rack up your score!",
         "Have fun playing!",
         "",
@@ -452,21 +452,25 @@ while GAME_STATUS:
                 if reward == "Extra Life":
                     player_lives += 1
                     print(
-                        f"{FGColors.GREEN}You received an extra life! Lives: {player_lives}{FGColors.RESET}"
+                        f"{FGColors.GREEN}Extra life! Lives: {player_lives}{FGColors.RESET}"
                     )
                 elif reward == "Score Boost":
                     score += 50
                     print(
-                        f"{FGColors.GREEN}You received a score boost! Score: {score}{FGColors.RESET}"
+                        f"{FGColors.GREEN}You received a score boost! "
+                        f"Score: {score}{FGColors.RESET}"
                     )
+
                 elif reward == "Speed Boost":
                     # Improved player movement speed for a short time
                     speed_boost = True
                 elif reward == "Penalty":
                     player_lives -= 1
                     print(
-                        f"{FGColors.RED}The box was cursed! You lost a life! Lives: {player_lives}{FGColors.RESET}"
+                        f"{FGColors.RED}The box was cursed! You lost a life! "
+                        f"Lives: {player_lives}{FGColors.RESET}"
                     )
+
                 else:
                     print(f"{FGColors.YELLOW}The box was empty!{FGColors.RESET}")
                 time.sleep(0.5)
