@@ -2,6 +2,18 @@
 # -*- coding: UTF-8 -*-
 # Developed by Dadmehr Emami at home - Github @BDadmehr0/emamidadmehr@gmail.com
 
+"""
+This module implements a terminal-based game.
+
+It uses various libraries for functionality, including:
+- JSON for saving and loading player data.
+- OS and sys for system-level operations.
+- Random for generating random events in the game.
+- Signal and termios for handling terminal inputs.
+- Time for delays and timers.
+- pynput.keyboard for capturing keyboard input.
+"""
+
 import json  # Import json module to save player data
 import os
 import random
@@ -11,6 +23,7 @@ import termios
 import time
 
 from pynput import keyboard
+
 
 # Character
 PLAYER_CH = "P"  # character a player
