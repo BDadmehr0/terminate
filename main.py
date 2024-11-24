@@ -75,6 +75,18 @@ class FGColors:
             if not attr.startswith("__")
         }
 
+    @classmethod
+    def get_color(cls, color_name):
+        """Returns the color code for a given foreground color name."""
+        color_name = color_name.upper()
+        return getattr(cls, color_name, cls.RESET)
+
+    @classmethod
+    def format_text(cls, text, color_name):
+        """Returns the text formatted with the specified foreground color."""
+        color_code = cls.get_color(color_name)
+        return f"{color_code}{text}{cls.RESET}"
+
 
 class BGColors:
     """Background Colors"""
@@ -96,6 +108,18 @@ class BGColors:
             for attr, value in cls.__dict__.items()
             if not attr.startswith("__")
         }
+
+    @classmethod
+    def get_color(cls, color_name):
+        """Returns the color code for a given background color name."""
+        color_name = color_name.upper()
+        return getattr(cls, color_name, cls.RESET)
+
+    @classmethod
+    def format_text(cls, text, color_name):
+        """Returns the text formatted with the specified background color."""
+        color_code = cls.get_color(color_name)
+        return f"{color_code}{text}{cls.RESET}"
 
 
 class SystemCall:
@@ -146,11 +170,10 @@ class SystemCall:
         return os.get_terminal_size()
 
     @staticmethod
-    def handle_exit_signal(signum, frame):
+    def handle_exit_signal(_signum, _frame):
         """Handles the exit signal, restoring settings and saving player data."""
         SystemCall.show_cursor()  # Ensure the cursor is shown
         os.system("clear")
-        global OLD_SETTINGS  # Make sure we're using the global old_settings
         SystemCall.restore_echo(OLD_SETTINGS)
         save_player_data()  # Save player data before exiting
         sys.exit(0)
@@ -250,7 +273,7 @@ class SystemInputs:
         """
         Stops the keyboard listener.
 
-        This method stops the listener, effectively halting the tracking of key presses and releases.
+        This method stops the listener, halting key press and release tracking.
         """
         self.listener.stop()
 
@@ -266,19 +289,19 @@ class Map:
     Attributes:
     columns (int): The number of columns in the map (based on terminal size).
     lines (int): The number of lines in the terminal (used for map generation).
-    generated_map (str): A string representing the map layout with characters such as '.', '_', '⌂', and '↟'.
+    generated_map (str): A string representing the map layout with characters like '.', '_', '⌂', and '↟'.
     enemies (list): A list of positions where enemies are located on the map.
     boxes (list): A list of positions where boxes are located on the map.
 
     Methods:
     __init__(): Initializes the map, generates the layout, and creates enemies and boxes.
-    generate_random_map(): Generates a random map layout with weighted probabilities for different characters.
+    generate_random_map(): Creates a random map with weighted probabilities for various characters.
     generate_boxes(): Generates boxes on the map with a 0.5% chance for each column.
-    generate_enemies(): Generates enemies on the map with a 20% chance, excluding the first and last 5 columns.
-    move_enemies_towards_player(): Moves enemies one step towards the player, and decreases player lives if enemies hit the player.
-    draw(): Renders the map on the terminal, displaying the player, enemies, boxes, and other elements.
-    check_new_map(): Checks if the player has reached the end of the map and moves them to a new map.
-    check_attack_option(): Checks if the player is adjacent to an enemy or box and displays the corresponding attack message.
+    generate_enemies(): Spawns enemies on the map with a 20% chance, excluding the first and last 5 columns.
+    move_enemies_towards_player(): Moves enemies toward the player and decreases lives on collision.
+    draw(): Renders the map, showing the player, enemies, boxes, and other elements.
+    check_new_map(): Checks if the player reached the map's end and moves to a new map.
+    check_attack_option(): Checks if the player is adjacent to an enemy or box and shows the attack message.
     """
 
     def __init__(self):
@@ -322,7 +345,7 @@ class Map:
 
     def generate_enemies(self):
         """
-        Generates enemies on the map with a 5% chance for each column (excluding the first and last 5 columns).
+        Generates enemies on the map with a 5% chance per column, excluding the first and last 5 columns.
 
         This method updates the global `enemies` list with the positions of the generated enemies.
         """
@@ -337,7 +360,7 @@ class Map:
 
     def move_enemies_towards_player(self):
         """
-        Moves enemies one step towards the player. If an enemy reaches the player, the player's lives are decreased.
+        Moves enemies towards the player, decreasing lives if an enemy reaches the player.
 
         This method updates the `enemies` list and checks if any enemy has collided with the player.
         """
