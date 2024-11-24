@@ -227,7 +227,8 @@ class Map:
             elif i in boxes:
                 indexed_line += f"{FGColors.YELLOW}{BOX_CH}{FGColors.RESET}"
             elif i == self.columns - 1:
-                indexed_line += f"{BGColors.MAGENTA}{FGColors.WHITE}>{FGColors.RESET}{BGColors.RESET}"
+                prefix = f"{BGColors.MAGENTA}{FGColors.WHITE}>{FGColors.RESET}{BGColors.RESET}"
+                indexed_line += prefix
             else:
                 # Here we specify that the character "↟" should be green.
                 if self.generated_map[i] == "↟":
