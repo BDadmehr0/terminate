@@ -24,7 +24,6 @@ import time
 
 from pynput import keyboard
 
-
 # Character
 PLAYER_CH = "P"  # character a player
 ENEMY_CH = "E"  # character a enemy
@@ -192,7 +191,6 @@ class SystemCall:
             print(f"Error in disable_echo: {e}")
             return None
 
-
     @staticmethod
     def restore_echo(OLD_SETTINGS):
         """Restores the terminal input echo settings."""
@@ -201,7 +199,6 @@ class SystemCall:
             termios.tcsetattr(fd, termios.TCSADRAIN, OLD_SETTINGS)
         else:
             print("Warning: OLD_SETTINGS is invalid, skipping restore.")
-
 
 
 class SystemInputs:
@@ -298,7 +295,7 @@ class Map:
     Attributes:
     columns (int): The number of columns in the map (based on terminal size).
     lines (int): The number of lines in the terminal (used for map generation).
-    generated_map (str): A string representing the map layout with characters like '.', '_', 
+    generated_map (str): A string representing the map layout with characters like '.', '_',
                      '⌂', and '↟'.
     enemies (list): A list of positions where enemies are located on the map.
     boxes (list): A list of positions where boxes are located on the map.
@@ -307,7 +304,7 @@ class Map:
     __init__(): Initializes the map, generates the layout, and creates enemies and boxes.
     generate_random_map(): Creates a random map with weighted probabilities for various characters.
     generate_boxes(): Generates boxes on the map with a 0.5% chance for each column.
-    generate_enemies(): Spawns enemies on the map with a 20% chance, excluding the first 
+    generate_enemies(): Spawns enemies on the map with a 20% chance, excluding the first
                     and last 5 columns.
     move_enemies_towards_player(): Moves enemies toward the player and decreases lives on collision.
     draw(): Renders the map, showing the player, enemies, boxes, and other elements.
@@ -494,8 +491,6 @@ def show_menu():
         if OLD_SETTINGS is None:
             print("Warning: Terminal settings could not be saved.")
 
-
-
         if choice == "1":
             load_player_data()  # Load player data before starting
             GAME_STATUS = True
@@ -574,7 +569,6 @@ def load_player_data():
             OLD_SETTINGS = SystemCall.disable_echo()
             if OLD_SETTINGS is None:
                 print("Warning: Terminal settings could not be saved.")
-
 
             if choice_menu2 == "1":
                 PLAYER_POSITION = 0
