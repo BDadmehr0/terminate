@@ -182,17 +182,26 @@ class SystemCall:
     def disable_echo():
         """Disables terminal input echo for secure input (e.g., password)."""
         fd = sys.stdin.fileno()
-        OLD_SETTINGS = termios.tcgetattr(fd)
-        new_settings = termios.tcgetattr(fd)
-        new_settings[3] = new_settings[3] & ~termios.ECHO  # Disable echo
-        termios.tcsetattr(fd, termios.TCSADRAIN, new_settings)
-        return OLD_SETTINGS
+        try:
+            old_settings = termios.tcgetattr(fd)
+            new_settings = termios.tcgetattr(fd)
+            new_settings[3] = new_settings[3] & ~termios.ECHO
+            termios.tcsetattr(fd, termios.TCSADRAIN, new_settings)
+            return old_settings
+        except Exception as e:
+            print(f"Error in disable_echo: {e}")
+            return None
+
 
     @staticmethod
     def restore_echo(OLD_SETTINGS):
         """Restores the terminal input echo settings."""
-        fd = sys.stdin.fileno()
-        termios.tcsetattr(fd, termios.TCSADRAIN, OLD_SETTINGS)
+        if OLD_SETTINGS and isinstance(OLD_SETTINGS, list) and len(OLD_SETTINGS) == 7:
+            fd = sys.stdin.fileno()
+            termios.tcsetattr(fd, termios.TCSADRAIN, OLD_SETTINGS)
+        else:
+            print("Warning: OLD_SETTINGS is invalid, skipping restore.")
+
 
 
 class SystemInputs:
@@ -482,6 +491,10 @@ def show_menu():
 
         # Restore echo to disabled after menu input
         OLD_SETTINGS = SystemCall.disable_echo()
+        if OLD_SETTINGS is None:
+            print("Warning: Terminal settings could not be saved.")
+
+
 
         if choice == "1":
             load_player_data()  # Load player data before starting
@@ -559,6 +572,9 @@ def load_player_data():
 
             # Restore echo to disabled after menu input
             OLD_SETTINGS = SystemCall.disable_echo()
+            if OLD_SETTINGS is None:
+                print("Warning: Terminal settings could not be saved.")
+
 
             if choice_menu2 == "1":
                 PLAYER_POSITION = 0
@@ -602,6 +618,9 @@ signal.signal(signal.SIGINT, SystemCall.handle_exit_signal)  # Handles Ctrl+C (S
 
 # Disable input and save old settings
 OLD_SETTINGS = SystemCall.disable_echo()
+if OLD_SETTINGS is None:
+    print("Warning: Terminal settings could not be saved.")
+
 
 # Create an instance of SystemInputs
 input_handler = SystemInputs()
